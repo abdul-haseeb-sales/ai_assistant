@@ -56,5 +56,54 @@ Try asking:
 - *"Find sales invoices created for Sysnova"*
 - *"Search for a file named report.pdf"*
 
+## Troubleshooting / Common Errors
+
+Agar installation ya execution ke dauran niche diye gaye errors aate hain, to in steps se solve karein:
+
+### 1. Error: `Module HR not found` (Site crash during migrate)
+* **Wajah:** `sites/apps.txt` ke missing hone ya aakhir mein line break (newline) na hone ki wajah se app register nahi ho pati.
+* **Hal:** Run these commands on your server:
+  ```bash
+  # Rewrite apps.txt with correct line breaks
+  printf "frappe\nemployee_self_service\ncrm\ndrive\neducation\npayments\nerpnext\ntelephony\nhelpdesk\nhrms\nerpnext_sysnova_ai\n" > sites/apps.txt
+  
+  # Manually link HRMS in python env
+  ./env/bin/pip install -e apps/hrms
+  
+  # Migrate and restart
+  bench clear-cache
+  bench --site your-site.com migrate
+  bench restart
+  ```
+
+### 2. Error: `No module named 'erpnext_sysnova_ai.erpnext_sysnova_ai'`
+* **Wajah:** JavaScript API call whitelisted method path galat hone ki wajah se (`sysnova_ai_widget.js` mein whitelisted import name duplicate ho raha ho).
+* **Hal:** Make sure karein ke `sysnova_ai_widget.js` mein path sirf single name ke sath ho:
+  * **Sahi Path:** `erpnext_sysnova_ai.api.chat_with_gemini` (purana duplicate path `erpnext_sysnova_ai.erpnext_sysnova_ai` hata dein).
+
+### 3. Error: `TypeError [ERR_INVALID_ARG_TYPE]` (bench build crash)
+* **Wajah:** Custom app directory mein `package.json` file na hone ki wajah se esbuild / Yarn link compilation crash ho jati hai.
+* **Hal:** Make sure karein ke `apps/erpnext_sysnova_ai/package.json` file exist karti ho. Phir yeh run karein:
+  ```bash
+  bench setup requirements
+  bench build --app erpnext_sysnova_ai
+  bench clear-cache
+  bench restart
+  ```
+
+### 4. Error: `429 Quota Exceeded (limit: 0)` / `404 Model Not Found`
+* **Wajah:** Google ne `gemini-1.5-flash` model retire kar diya hai, aur `gemini-2.0-flash` par aapke Google account ke free tier ki request limits **0** ho sakti hain.
+* **Hal:** 
+  1. API request mein working free model **`gemini-2.5-flash`** use karein (apne `api.py` mein setup change karein):
+     ```python
+     model_name='gemini-2.5-flash',
+     ```
+  2. Nayi key generate karne ke liye Google AI Studio par jaakar click karein: **"Create API key in new project"** (existing GCP project select na karein).
+  3. New key ko set-config karein:
+     ```bash
+     bench --site your-site.com set-config gemini_api_key "APKI_NEW_PROJECT_KEY"
+     bench restart
+     ```
+
 ## License
 MIT License. Free to use and modify.
