@@ -1,0 +1,8 @@
+{
+  "name": "erpnext_sysnova_ai",
+  "version": "0.0.1",
+  "description": "Gemini AI Assistant for ERPNext v16",
+  "author": "Sysnova Solutions",
+  "license": "mit",
+  "dependencies": {}
+}
