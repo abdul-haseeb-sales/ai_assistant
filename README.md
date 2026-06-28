@@ -1,4 +1,4 @@
-# ERPNext Sysnova AI Assistant
+# ERPNext AI Assistant
 
 [![Frappe Framework](https://img.shields.io/badge/Frappe-v16-blue.svg)](https://frappeframework.com/)
 [![ERPNext](https://img.shields.io/badge/ERPNext-v16-brightgreen.svg)](https://erpnext.com/)
@@ -24,7 +24,7 @@ It allows users to interact with ERPNext via natural language. The AI uses **Fun
 2. Clone and install the app:
    ```bash
    bench get-app https://github.com/abdul-haseeb-sales/erpnext_sysnova_ai.git
-   bench --site your-site.com install-app erpnext_sysnova_ai
+   bench --site your-site.com install-app ai_assistant
    ```
 
 3. **Install the Google Generative AI Library:**
@@ -40,6 +40,7 @@ The AI needs your personal Gemini API key to work.
 1. Get your API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
 2. Save the API key in your site's config using bench:
    ```bash
+   ```bash
    bench --site your-site.com set-config gemini_api_key "YOUR_ACTUAL_API_KEY_HERE"
    ```
 3. Restart bench:
@@ -50,7 +51,7 @@ The AI needs your personal Gemini API key to work.
 ## Usage
 
 Once installed and configured, log in to ERPNext. You will see a blue chat bubble icon in the bottom right corner of the screen.
-Click it to open the Sysnova AI Assistant. 
+Click it to open the AI Assistant. 
 
 Try asking:
 - *"Find sales invoices created for Sysnova"*
@@ -65,7 +66,7 @@ Agar installation ya execution ke dauran niche diye gaye errors aate hain, to in
 * **Hal:** Run these commands on your server:
   ```bash
   # Rewrite apps.txt with correct line breaks
-  printf "frappe\nemployee_self_service\ncrm\ndrive\neducation\npayments\nerpnext\ntelephony\nhelpdesk\nhrms\nerpnext_sysnova_ai\n" > sites/apps.txt
+  printf "frappe\nemployee_self_service\ncrm\ndrive\neducation\npayments\nerpnext\ntelephony\nhelpdesk\nhrms\nai_assistant\n" > sites/apps.txt
   
   # Manually link HRMS in python env
   ./env/bin/pip install -e apps/hrms
@@ -76,17 +77,17 @@ Agar installation ya execution ke dauran niche diye gaye errors aate hain, to in
   bench restart
   ```
 
-### 2. Error: `No module named 'erpnext_sysnova_ai.erpnext_sysnova_ai'`
-* **Wajah:** JavaScript API call whitelisted method path galat hone ki wajah se (`sysnova_ai_widget.js` mein whitelisted import name duplicate ho raha ho).
-* **Hal:** Make sure karein ke `sysnova_ai_widget.js` mein path sirf single name ke sath ho:
-  * **Sahi Path:** `erpnext_sysnova_ai.api.chat_with_gemini` (purana duplicate path `erpnext_sysnova_ai.erpnext_sysnova_ai` hata dein).
+### 2. Error: `No module named 'ai_assistant.ai_assistant'`
+* **Wajah:** JavaScript API call whitelisted method path galat hone ki wajah se (`ai_assistant_widget.js` mein whitelisted import name duplicate ho raha ho).
+* **Hal:** Make sure karein ke `ai_assistant_widget.js` mein path sirf single name ke sath ho:
+  * **Sahi Path:** `ai_assistant.api.chat_with_gemini` (purana duplicate path `ai_assistant.ai_assistant` hata dein).
 
 ### 3. Error: `TypeError [ERR_INVALID_ARG_TYPE]` (bench build crash)
 * **Wajah:** Custom app directory mein `package.json` file na hone ki wajah se esbuild / Yarn link compilation crash ho jati hai.
-* **Hal:** Make sure karein ke `apps/erpnext_sysnova_ai/package.json` file exist karti ho. Phir yeh run karein:
+* **Hal:** Make sure karein ke `apps/ai_assistant/package.json` file exist karti ho. Phir yeh run karein:
   ```bash
   bench setup requirements
-  bench build --app erpnext_sysnova_ai
+  bench build --app ai_assistant
   bench clear-cache
   bench restart
   ```

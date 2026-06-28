@@ -24,19 +24,18 @@ def chat_with_gemini(message):
         
         # System instructions to act as ERPNext Assistant
         system_instruction = (
-            "You are Sysnova AI, an intelligent assistant inside ERPNext. "
+            "You are AI Assistant, an intelligent assistant inside ERPNext. "
             "You help users find files, search database records (like Invoices, Customers, Items), "
             "and answer queries based on the data. You have access to database search tools."
         )
 
         model = genai.GenerativeModel(
-            model_name='gemini-2.0-flash',
+            model_name='gemini-2.5-flash',
             system_instruction=system_instruction,
             tools=[search_erpnext_database, find_uploaded_files]
         )
 
-        # In a production app, you would maintain chat history in the database.
-        # For this implementation, we use a stateless one-turn tool calling approach.
+        # stateless one-turn tool calling approach.
         chat = model.start_chat(enable_automatic_function_calling=True)
         response = chat.send_message(message)
         

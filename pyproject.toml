@@ -1,5 +1,5 @@
 [project]
-name = "erpnext_sysnova_ai"
+name = "ai_assistant"
 authors = [
     { name = "Sysnova Solutions", email = "info@sysnovasolutions.com"}
 ]
